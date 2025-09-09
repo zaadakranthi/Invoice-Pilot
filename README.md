@@ -89,8 +89,24 @@ Here is a step-by-step guide to get your code into a GitHub repository. You will
 5.  **Important**: Do NOT initialize the repository with a `README`, `.gitignore`, or `license` file. We already have those.
 6.  Click **Create repository**.
 
+### Step 1.5: Authenticate with GitHub
+Before you can push your code, you need to log in to your GitHub account from this environment's terminal. This is a one-time setup.
+
+1.  **Run the login command in the terminal:**
+    ```bash
+    gh auth login
+    ```
+2.  **Follow the on-screen prompts.** It will ask you a few questions. The recommended answers are usually the default:
+    *   What account do you want to log into? **GitHub.com**
+    *   What is your preferred protocol for Git operations? **HTTPS**
+    *   Authenticate Git with your GitHub credentials? **Yes**
+    *   How would you like to authenticate? **Login with a web browser**
+3.  **The terminal will give you a one-time code** and ask you to open a URL in your browser.
+4.  **Copy the code**, open the URL, and paste the code on the GitHub page. Authorize the login.
+5.  Once you are done in the browser, come back to the terminal. You are now authenticated.
+
 ### Step 2: Push Your Existing Code
-After creating the repository, GitHub will show you a page with instructions. You will follow the steps under the "...or push an existing repository from the command line" section.
+After creating the repository and authenticating, you can now push your code.
 
 Open a terminal or command prompt in your project's root directory and run the following commands one by one:
 
