@@ -9,6 +9,7 @@ import { DataProvider } from '@/context/data-context';
 export const metadata: Metadata = {
   title: 'InvoicePilot',
   description: 'Free GST Invoicing Web Application',
+  manifest: '/manifest.json',
 };
 
 const fontSans = FontSans({
