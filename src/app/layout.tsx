@@ -5,6 +5,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { Inter as FontSans } from 'next/font/google';
 import { cn } from '@/lib/utils';
 import { DataProvider } from '@/context/data-context';
+import { PwaInstaller } from '@/components/pwa-installer';
 
 export const metadata: Metadata = {
   title: 'InvoicePilot',
@@ -28,6 +29,7 @@ export default function RootLayout({
         <DataProvider>
           {children}
           <Toaster />
+          <PwaInstaller />
         </DataProvider>
       </body>
     </html>
