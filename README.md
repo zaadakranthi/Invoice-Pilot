@@ -1,3 +1,13 @@
+{ pkgs, ... }:
+
+{
+  packages = [
+    pkgs.nodejs_20,
+    pkgs.openssh
+  ];
+  
+  # ... other configurations
+}
 # FreeQuickGSTwithCMA: Your AI-Powered GST & Accounting Co-Pilot
 
 Welcome to FreeQuickGSTwithCMA, a modern, responsive web application designed to simplify GST invoicing, accounting, and compliance for Indian businesses. This application is built with a powerful tech stack to be robust, scalable, and easy to maintain.
