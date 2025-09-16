@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Briefcase, UserCircle, Settings, LogOut, Repeat, Home } from 'lucide-react';
+import { UserCircle, Settings, LogOut, Repeat } from 'lucide-react';
 import { Button } from './ui/button';
 import {
   DropdownMenu,
@@ -25,6 +25,7 @@ import { auth } from '@/lib/firebase';
 import { useToast } from '@/hooks/use-toast';
 import { useData } from '@/context/data-context';
 import { useMemo } from 'react';
+import { MobileNav } from './sidebar-nav';
 
 export function MainHeader() {
   const router = useRouter();
@@ -35,7 +36,6 @@ export function MainHeader() {
   
   const myClients = useMemo(() => {
     if (!rootUser?.id || !users) return [];
-    // Ensure we don't include the professional's own user object in the client list
     return users.filter(u => u.ownerId === rootUser.id && u.id !== rootUser.id);
   }, [users, rootUser]);
   
@@ -62,19 +62,12 @@ export function MainHeader() {
   };
 
   return (
-    <header className="flex h-16 items-center justify-between px-4 sm:px-6 border-b bg-white print:hidden">
-      <div className="flex items-center gap-4">
-        <Link href="/dashboard" className="flex items-center gap-3">
-          <Briefcase className="size-8 text-primary" />
-          <h1 className="text-2xl font-bold tracking-tight text-gray-800">
-            InvoicePilot
-          </h1>
-        </Link>
+    <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6 print:hidden">
+        <MobileNav />
         {isProfessional && (
-            <div className="hidden sm:block">
+            <div className="sm:hidden">
               <Select onValueChange={handleSwitch} value={authUser?.id || ''}>
-                  <SelectTrigger className="w-[280px]">
-                     <span className="text-muted-foreground mr-2">Managing:</span>
+                  <SelectTrigger className="w-[180px] sm:w-[280px]">
                      <SelectValue placeholder="Select a workspace...">
                        {getWorkspaceName()}
                      </SelectValue>
@@ -88,14 +81,10 @@ export function MainHeader() {
               </Select>
             </div>
         )}
-      </div>
-      <div className="flex items-center gap-4">
-        <Button variant="ghost" asChild>
-          <Link href="/pricing">Pricing</Link>
-        </Button>
+      <div className="ml-auto flex items-center gap-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="rounded-full">
+            <Button variant="outline" size="icon" className="overflow-hidden rounded-full">
               <UserCircle className="h-6 w-6" />
               <span className="sr-only">Toggle user menu</span>
             </Button>

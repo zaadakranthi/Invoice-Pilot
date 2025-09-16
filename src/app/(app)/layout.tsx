@@ -1,9 +1,9 @@
-
 'use client';
 
+import { MobileNav, SidebarNav } from '@/components/sidebar-nav';
+import { MainHeader } from '@/components/main-header';
 import type { ReactNode } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { SidebarNav } from '@/components/sidebar-nav';
 import { AppFooter } from '@/components/app-footer';
 import { useEffect, useState } from 'react';
 import { useData } from '@/context/data-context';
@@ -30,13 +30,11 @@ export default function AppLayout({ children }: { children: ReactNode }) {
     const isProfessional = rootUser?.role === 'professional';
     const isManagingClient = !!authUser?.ownerId; 
 
-    // Redirect a professional to their admin dashboard if they are not managing a client
     if (isProfessional && !isManagingClient) {
         if (!pathname.startsWith('/admin')) {
             router.replace('/admin');
         }
     } else {
-        // Redirect anyone else (direct users, or professionals managing a client) away from the admin area
         if (pathname.startsWith('/admin')) {
             router.replace('/dashboard');
         }
@@ -65,7 +63,8 @@ export default function AppLayout({ children }: { children: ReactNode }) {
   return (
       <div className="flex min-h-screen w-full flex-col bg-muted/40">
         <SidebarNav />
-        <div className="flex flex-col sm:pl-14">
+        <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
+          <MainHeader />
           <div className="flex-1">{children}</div>
           <AppFooter />
         </div>

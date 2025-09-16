@@ -68,7 +68,7 @@ export function TrialBalance() {
   const isBalanced = Math.round(totalDebits) === Math.round(totalCredits);
 
   const handleDownloadTemplate = () => {
-    const header = 'Account,Debit,Credit\n';
+    const header = 'Account,Debit,Credit\\n';
     const sampleData = [
         'Capital,0,1000000',
         'Sales Revenue,0,2500000',
@@ -78,7 +78,7 @@ export function TrialBalance() {
         'Fixed Assets,1500000,0',
         'Cash & Bank,100000,0',
         'Accounts Payable,0,200000',
-    ].join('\n');
+    ].join('\\n');
     const csvContent = `data:text/csv;charset=utf-8,${header}${sampleData}`;
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement('a');
@@ -94,7 +94,7 @@ export function TrialBalance() {
     const rows = ledgerData.map(item => 
       [`"${item.account}"`, item.debit, item.credit].join(',')
     );
-    const csvContent = [header.join(','), ...rows].join('\n');
+    const csvContent = [header.join(','), ...rows].join('\\n');
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
@@ -116,7 +116,7 @@ export function TrialBalance() {
     const reader = new FileReader();
     reader.onload = (e) => {
         const text = e.target?.result as string;
-        const lines = text.split('\n').filter(line => line.trim() !== '');
+        const lines = text.split('\\n').filter(line => line.trim() !== '');
         if (lines.length < 2) {
             toast({ variant: 'destructive', title: 'Invalid CSV', description: 'CSV file must have a header and at least one data row.' });
             return;
@@ -150,7 +150,7 @@ export function TrialBalance() {
 
   const handleRowClick = (item: any) => {
     if (trialBalanceData?.source === 'upload') {
-        toast({ title: "Drill-down Disabled", description: "Drill-down is not available for uploaded trial balances."});
+        toast({ title: "Drill-down Disabled", description: "Drill-down is not available for uploaded trial balances."}) /* eslint-disable-line no-irregular-whitespace */;
         return;
     }
     const accountId = item.id;
@@ -173,10 +173,10 @@ export function TrialBalance() {
             As on {trialBalanceData ? format(new Date(trialBalanceData.date), 'PPP') : '...'} {dataSourceText}
           </CardDescription>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-col sm:flex-row items-center gap-2">
             <Popover>
                 <PopoverTrigger asChild>
-                  <Button variant={"outline"} className={cn("w-[240px] justify-start text-left font-normal", !asOnDateForTrial && "text-muted-foreground")}>
+                  <Button variant={"outline"} className={cn("w-full sm:w-[240px] justify-start text-left font-normal", !asOnDateForTrial && "text-muted-foreground")}>
                     <CalendarIcon className="mr-2 h-4 w-4" />
                     {asOnDateForTrial ? format(asOnDateForTrial, "PPP") : <span>Pick a date</span>}
                   </Button>

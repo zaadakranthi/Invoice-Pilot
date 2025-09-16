@@ -287,7 +287,7 @@ export function InvoiceForm({ invoiceId }: InvoiceFormProps) {
     <>
     <Card>
       <CardHeader>
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col sm:flex-row justify-between items-center">
             <CardTitle>{isEditMode ? `Edit Invoice #${invoiceId}` : 'New Invoice'}</CardTitle>
         </div>
       </CardHeader>
@@ -306,7 +306,7 @@ export function InvoiceForm({ invoiceId }: InvoiceFormProps) {
                     notFoundMessage="No customer found."
                 />
             </div>
-             <div className="grid grid-cols-2 gap-4 col-span-2">
+             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 col-span-2">
               <div className="grid gap-2">
                 <Label htmlFor="invoiceNumber">Invoice Number</Label>
                 <Input 
@@ -500,7 +500,7 @@ export function InvoiceForm({ invoiceId }: InvoiceFormProps) {
           </div>
         </div>
       </CardContent>
-      <CardFooter className="flex justify-end gap-2">
+      <CardFooter className="flex flex-col sm:flex-row justify-end gap-2">
         <Button variant="outline" onClick={() => router.push('/invoices')}>Cancel</Button>
         <Button onClick={handleSaveInvoice}><Save className="mr-2 h-4 w-4" /> {isEditMode ? 'Update Invoice' : 'Save Invoice'}</Button>
       </CardFooter>

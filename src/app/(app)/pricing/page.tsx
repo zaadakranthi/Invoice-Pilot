@@ -12,11 +12,12 @@ import {
 import { cn } from '@/lib/utils';
 import { PageHeader } from '@/components/page-header';
 import { Separator } from '@/components/ui/separator';
+import { CURRENCY } from 'studio/config';
 
 const individualPlans = [
   {
     name: 'Starter',
-    price: '₹0',
+    price: `${CURRENCY}0`,
     period: 'Free Forever',
     description: 'For individuals and small businesses getting started with invoicing.',
     features: [
@@ -30,7 +31,7 @@ const individualPlans = [
   },
   {
     name: 'Pro',
-    price: '₹99',
+    price: `${CURRENCY}99`,
     period: '/ month',
     description: 'For businesses that need to manage GST compliance effortlessly.',
     features: [
@@ -45,7 +46,7 @@ const individualPlans = [
   },
   {
     name: 'Business',
-    price: '₹199',
+    price: `${CURRENCY}199`,
     period: '/ month',
     description: 'A complete financial suite for growing businesses.',
     features: [
@@ -64,7 +65,7 @@ const individualPlans = [
 const professionalPlans = [
     {
         name: 'Pro',
-        price: '₹499',
+        price: `${CURRENCY}499`,
         period: '/ month',
         description: 'For professionals managing a small number of clients.',
         features: [
@@ -77,7 +78,7 @@ const professionalPlans = [
     },
     {
         name: 'Business',
-        price: '₹999',
+        price: `${CURRENCY}999`,
         period: '/ month',
         description: 'For growing firms that require more capacity and support.',
          features: [

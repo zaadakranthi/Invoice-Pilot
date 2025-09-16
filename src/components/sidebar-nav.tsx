@@ -12,7 +12,6 @@ import {
 import {
     Briefcase,
     Receipt,
-    ShoppingCart,
     Users,
     Package,
     FileCheck,
@@ -22,13 +21,7 @@ import {
     LogOut,
     HeartHandshake,
     Shield,
-    Repeat,
-    FileArchive,
-    Wallet,
-    Scale,
     Telescope,
-    Clock,
-    Wind,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -37,6 +30,8 @@ import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { useToast } from '@/hooks/use-toast';
 import { useData } from '@/context/data-context';
+import { Sheet, SheetContent, SheetTrigger } from './ui/sheet';
+import { PanelLeft } from 'lucide-react';
 
 interface NavItem {
     href: string;
@@ -120,6 +115,46 @@ const navItems: NavItem[] = [
 ];
 
 
+export function MobileNav() {
+  const pathname = usePathname();
+
+  return (
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button size="icon" variant="outline" className="sm:hidden">
+          <PanelLeft className="h-5 w-5" />
+          <span className="sr-only">Toggle Menu</span>
+        </Button>
+      </SheetTrigger>
+      <SheetContent side="left" className="sm:max-w-xs">
+        <nav className="grid gap-6 text-lg font-medium">
+          <Link
+            href="/dashboard"
+            className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
+          >
+            <Briefcase className="h-5 w-5 transition-all group-hover:scale-110" />
+            <span className="sr-only">InvoicePilot</span>
+          </Link>
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={cn(
+                "flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground",
+                pathname.startsWith(item.href) && item.href !== '/dashboard' && "text-foreground",
+                pathname === '/dashboard' && item.href === '/dashboard' && "text-foreground"
+              )}
+            >
+              <item.icon className="h-5 w-5" />
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+      </SheetContent>
+    </Sheet>
+  );
+}
+
 export function SidebarNav() {
   const pathname = usePathname();
   const router = useRouter();
@@ -145,10 +180,8 @@ export function SidebarNav() {
         return true;
     }
     if (item.children) {
-      // If it has children, check if the current path starts with any child href
       return item.children.some(child => pathname.startsWith(child.href));
     }
-    // Otherwise, check for an exact match or if it's the dashboard
     return pathname === item.href || (pathname === '/dashboard' && item.href === '/dashboard');
   };
 
