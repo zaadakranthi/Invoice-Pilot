@@ -37,6 +37,7 @@ import {
   Truck,
   Edit,
   FileText,
+  Copy,
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import {
@@ -119,8 +120,8 @@ export default function InvoicesPage() {
                 { content: 'Billed To:', styles: { fontStyle: 'bold' } }
             ],
             [
-                `${brandingSettings?.businessName || ''}\\n${brandingSettings?.address || ''}`,
-                `${customer?.name || invoice.client}\\n${customer?.billingAddress || ''}`
+                `${brandingSettings?.businessName || ''}\n${brandingSettings?.address || ''}`,
+                `${customer?.name || invoice.client}\n${customer?.billingAddress || ''}`
             ],
             [
                 { content: `GSTIN: ${brandingSettings?.gstin || ''}`, styles: { fontStyle: 'bold' } },
@@ -257,7 +258,7 @@ export default function InvoicesPage() {
         invoice.totalAmount
       ].join(',')
     );
-    const csvContent = [header.join(','), ...rows].join('\\n');
+    const csvContent = [header.join(','), ...rows].join('\n');
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
@@ -270,7 +271,7 @@ export default function InvoicesPage() {
   };
   
   const handleDownloadTemplate = () => {
-    const header = 'invoiceId,date,clientName,gstin,taxableValue,cgst,sgst,igst,cess,totalValue\\n';
+    const header = 'invoiceId,date,clientName,gstin,taxableValue,cgst,sgst,igst,cess,totalValue\n';
     const sampleData = 'INV-101,2024-05-20,Stark Industries,29AABCU9603R1ZJ,105932.2,9533.9,9533.9,0,0,125000';
     const csvContent = `data:text/csv;charset=utf-8,${header}${sampleData}`;
     const encodedUri = encodeURI(csvContent);
@@ -289,7 +290,7 @@ export default function InvoicesPage() {
     const reader = new FileReader();
     reader.onload = (e) => {
       const text = e.target?.result as string;
-      const lines = text.split('\\n').filter(line => line.trim() !== '');
+      const lines = text.split('\n').filter(line => line.trim() !== '');
       if (lines.length < 2) {
         toast({ variant: 'destructive', title: 'Invalid CSV', description: 'CSV file must have a header and at least one data row.' });
         return;
@@ -512,6 +513,9 @@ export default function InvoicesPage() {
                           <DropdownMenuItem onClick={() => router.push(`/invoices/edit/${invoice.id}`)}>
                             <Edit className="mr-2 h-4 w-4" /> Edit
                           </DropdownMenuItem>
+                           <DropdownMenuItem onClick={() => router.push(`/invoices/duplicate/${invoice.id}`)}>
+                            <Copy className="mr-2 h-4 w-4" /> Duplicate
+                          </DropdownMenuItem>
                           <DropdownMenuItem onClick={() => handleOpenDownloadDialog(invoice.id)}>
                             <Download className="mr-2 h-4 w-4" /> Download PDF
                           </DropdownMenuItem>
@@ -528,7 +532,7 @@ export default function InvoicesPage() {
                       </DropdownMenu>
                     </TableCell>
                   </TableRow>
-                )})}\
+                )})}
               </TableBody>
             </Table>
           </CardContent>
