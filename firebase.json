@@ -5,12 +5,34 @@
   },
   "hosting": {
     "public": "out",
-    "source": ".",
     "rewrites": [
       {
         "source": "**",
         "destination": "/index.html"
       }
     ]
+  },
+  "emulators": {
+    "hosting": {
+      "port": 8080,
+      "host": "0.0.0.0"
+    },
+    "firestore": {
+      "port": 8081,
+      "host": "0.0.0.0"
+    },
+    "ui": {
+      "enabled": true,
+      "port": 4000,
+      "host": "0.0.0.0"
+    },
+    "hub": {
+      "port": 4400,
+      "host": "0.0.0.0"
+    },
+    "logging": {
+      "port": 4500,
+      "host": "0.0.0.0"
+    }
   }
 }
