@@ -17,7 +17,6 @@ import { useRouter } from 'next/navigation';
 import { createUserProfile, getUser } from '@/lib/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { useData } from '@/context/data-context';
 
 const GoogleIcon = () => (
     <svg className="mr-2 h-4 w-4" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512">
@@ -28,68 +27,63 @@ const GoogleIcon = () => (
 export default function LoginPage() {
   const router = useRouter();
   const { toast } = useToast();
-  const [user, authLoading, authError] = useAuthState(auth);
-  const [isProcessingLogin, setIsProcessingLogin] = useState(true);
-  const { authUser, isReady } = useData();
+  const [user, authLoading] = useAuthState(auth);
+  const [isProcessing, setIsProcessing] = useState(true);
 
   useEffect(() => {
-    // This effect handles redirection based on auth state
-    if (authLoading) {
-        setIsProcessingLogin(true);
-        return;
-    }
-    
-    if (user && isReady && authUser) {
-      if (authUser.onboarded) {
-        router.replace('/dashboard');
-      } else {
-        router.replace('/onboarding');
-      }
-    } else if (!user) {
-      // If there's no firebase user, we are ready for a login attempt.
-      setIsProcessingLogin(false);
-    }
-  }, [user, authUser, authLoading, isReady, router]);
+    const handleLoginFlow = async (firebaseUser: FirebaseUser) => {
+      try {
+        await createUserProfile(firebaseUser);
+        const userProfile = await getUser(firebaseUser.uid);
 
-  const handleUserProfile = async (firebaseUser: FirebaseUser) => {
-    // 1. Ensure profile exists. This function is idempotent.
-    await createUserProfile(firebaseUser);
-    
-    // 2. Fetch the profile.
-    const userProfile = await getUser(firebaseUser.uid);
-    
-    if (userProfile) {
-      // The context will pick up the new user automatically.
-      // No need to call setAuthUser here.
-      // Routing is handled by the useEffect hook.
-    } else {
-      throw new Error("Could not retrieve user profile after creation.");
+        if (userProfile) {
+          if (userProfile.onboarded) {
+            router.replace('/dashboard');
+          } else {
+            router.replace('/onboarding');
+          }
+        } else {
+          throw new Error("Could not retrieve user profile after creation.");
+        }
+      } catch (error: any) {
+        console.error("Login flow error:", error);
+        toast({ variant: 'destructive', title: 'Login Error', description: "An error occurred during the login process." });
+        setIsProcessing(false); // Stop processing on error
+      }
+    };
+
+    if (authLoading) {
+      setIsProcessing(true);
+      return;
     }
-  };
+
+    if (user) {
+      setIsProcessing(true);
+      handleLoginFlow(user);
+    } else {
+      setIsProcessing(false);
+    }
+  }, [user, authLoading, router, toast]);
 
   const signInWithGoogle = async () => {
-    setIsProcessingLogin(true);
+    if (isProcessing) return;
+    setIsProcessing(true);
     const provider = new GoogleAuthProvider();
     try {
-      const result = await signInWithPopup(auth, provider);
-      if (result.user) {
-        await handleUserProfile(result.user);
-        // The useEffect will handle redirection once the context is ready.
-      } else {
-        throw new Error('No user information received from Google.');
-      }
+      await signInWithPopup(auth, provider);
+      // The useEffect hook will now handle the rest of the flow
     } catch (error: any) {
       if (error.code === 'auth/popup-blocked') {
           toast({ variant: 'destructive', title: 'Popup Blocked', description: 'Please allow popups for this site to sign in.' });
       } else if (error.code !== 'auth/popup-closed-by-user') {
           console.error("Error during signInWithPopup: ", error);
-          toast({ variant: 'destructive', title: 'Login Failed', description: error.message });
+          toast({ variant: 'destructive', title: 'Login Failed', description: "We couldn't sign you in. Please try again." });
       }
-      setIsProcessingLogin(false);
+      setIsProcessing(false); // Allow user to try again if popup is closed or fails
     }
   };
-
-  if (isProcessingLogin) {
+  
+  if (isProcessing) {
     return (
       <div className="flex min-h-screen w-full flex-col items-center justify-center bg-muted/40">
         <Loader2 className="h-10 w-10 animate-spin text-primary" />
@@ -111,7 +105,7 @@ export default function LoginPage() {
           <Button 
             className="w-full" 
             onClick={signInWithGoogle}
-            disabled={isProcessingLogin}
+            disabled={isProcessing}
           >
             <GoogleIcon />
             Sign In with Google

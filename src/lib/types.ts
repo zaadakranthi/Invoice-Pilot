@@ -126,7 +126,8 @@ export interface Product {
 // =================================================================
 export interface Invoice {
   id: string;
-  client: string;
+  customerId: string;
+  client: string; // This can be deprecated in the future but kept for now
   gstin: string;
   date: string; // 'YYYY-MM-DD'
   taxableValue: number;
@@ -144,7 +145,8 @@ export interface Invoice {
 
 export interface PurchaseBill {
   id: string;
-  vendor: string;
+  vendorId: string;
+  vendor: string; // This can be deprecated in the future but kept for now
   totalAmount: number;
   amountPaid: number;
   date: string; // 'YYYY-MM-DD'
@@ -157,7 +159,8 @@ export interface PurchaseBill {
 
 export interface CreditNote {
     id: string;
-    client: string;
+    customerId: string;
+    client: string; // This can be deprecated in the future but kept for now
     originalInvoice: string;
     date: string; // 'YYYY-MM-DD'
     totalAmount: number;
@@ -169,7 +172,8 @@ export interface CreditNote {
 
 export interface DebitNote {
     id: string;
-    vendor: string;
+    vendorId: string;
+    vendor: string; // This can be deprecated in the future but kept for now
     originalBill: string;
     date: string; // 'YYYY-MM-DD'
     totalAmount: number;
